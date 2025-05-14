@@ -211,12 +211,12 @@
             </a>
         </div>
         <h2 id="videoTitle" class="text-xl font-semibold flex-1 text-center overflow-x-auto whitespace-nowrap truncate custom-title-scroll"></h2>
-        <a href="/" class="px-4 py-2 bg-[#222] hover:bg-[#333] border border-[#333] rounded-lg transition-colors flex items-center min-w-0 home-btn">
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 mr-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M19 21V9.5l-7-5-7 5V21a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2z" />
-              <path d="M9 22V12h6v10" />
+        <a href="#" id="goBack" onclick="goBack()" class="px-4 py-2 bg-[#222] hover:bg-[#333] border border-[#333] rounded-lg transition-colors flex items-center min-w-0 home-btn">
+            <svg class="w-5 h-5 mr-1" viewBox="0 0 24 24" fill="#ffffff" xmlns="http://www.w3.org/2000/svg">
+                <path d="M5.25 11h15a1.5 1.5 0 1 1 0 3H5.25a1.5 1.5 0 0 1 0-3z"/>
+                <path d="M5.55 12 11.3 17.3a1.5 1.5 0 1 1-2.12 2.12L3 12l6.18-6.18a1.5 1.5 0 1 1 2.12 2.12L5.55 12z"/>
             </svg>
-            <span class="home-btn-text">返回首页</span>
+            <span class="home-btn-text">上一页</span>
         </a>
     </header>
 
@@ -357,7 +357,7 @@
                     <div class="mt-2 flex justify-center md:justify-end space-x-4">
                         <a href="about.html" class="text-gray-400 hover:text-white text-sm transition-colors">关于我们</a>
                         <a href="privacy.html" class="text-gray-400 hover:text-white text-sm transition-colors">隐私政策</a>
-                        <a href="https://help.unicef.org/#donation-form" target="_blank" rel="noopener" class="text-blue-400 hover:text-blue-300 text-sm transition-colors">捐赠</a>
+                        <a href="https://www.unicef.org/zh" target="_blank" rel="noopener" class="text-blue-400 hover:text-blue-300 text-sm transition-colors">捐赠</a>
                     </div>
                 </div>
             </div>
@@ -422,7 +422,25 @@
             document.getElementById('loading').style.display = 'block';
 
             initializePageContent();
-        });        // 初始化页面内容
+        });
+
+        // 判断是否再框架中打开
+        function inIframe() {
+            try {
+                // 如果当前窗口的顶层窗口不是自身，说明在框架中
+                return window.self !== window.top;
+            } catch (e) {
+                // 跨域访问会抛出错误，此时也说明在框架中
+                return true;
+            }
+        }
+        // 如果播放器不是在框架中打开，则隐藏上一页按钮
+        if (!inIframe()) {
+            goBack = document.getElementById('goBack');
+            goBack.style.display = 'none';
+        }
+
+        // 初始化页面内容
         function initializePageContent() {
             // 解析URL参数
             const urlParams = new URLSearchParams(window.location.search);
@@ -692,12 +710,12 @@
                 contextmenu: [                   // 自定义右键菜单
                     {
                         text: '关于 LibreTV',
-                        link: 'https://github.com/bestzwei/LibreTV'
+                        link: 'https://github.com/LibreSpark/LibreTV'
                     },
                     {
                         text: '问题反馈',
                         click: (player) => {
-                            window.open('https://github.com/bestzwei/LibreTV/issues', '_blank');
+                            window.open('https://github.com/LibreSpark/LibreTV/issues', '_blank');
                         }
                     }
                 ],
@@ -1680,6 +1698,12 @@
             icon.innerHTML = controlsLocked
                 ? '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d=\"M12 15v2m0-8V7a4 4 0 00-8 0v2m8 0H4v8h16v-8H6v-6z\"/>'
                 : '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d=\"M15 11V7a3 3 0 00-6 0v4m-3 4h12v6H6v-6z\"/>';
+        }
+
+        // 返回上一页
+        function goBack() {
+            const parentWindow = window.parent;
+            parentWindow.closeVideoPlayer();
         }
     </script>
 </body>

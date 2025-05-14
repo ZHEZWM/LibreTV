@@ -500,17 +500,17 @@ function playFromHistory(url, title, episodeIndex, playbackPosition = 0) {
             if (playbackPosition > 10) {
                 playUrl.searchParams.set('position', Math.floor(playbackPosition).toString());
             }
-            window.location.href = playUrl.toString();
+            showVideoPlayer(playUrl.toString());
         } else {
             // 原始URL，构造player页面链接
             const playerUrl = `player.html?url=${encodeURIComponent(url)}&title=${encodeURIComponent(title)}&index=${episodeIndex}${positionParam}`;
-            window.location.href = playerUrl;
+            showVideoPlayer(playerUrl);
         }
     } catch (e) {
         console.error('从历史记录播放失败:', e);
         // 回退到原始简单URL
         const simpleUrl = `player.html?url=${encodeURIComponent(url)}&title=${encodeURIComponent(title)}&index=${episodeIndex}`;
-        window.location.href = simpleUrl;
+        showVideoPlayer(simpleUrl);
     }
 }
 
